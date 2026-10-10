@@ -1,40 +1,123 @@
 <!DOCTYPE html>
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    
+
     <title>szachmaty.ru</title>
     <meta name="description" content="A little website that i made myself">
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-
 </head>
 
 <body>
-    <header>
-        <div class="main-title">
+    <header id="hero">
+        <h1 class="main-title">
             STANISŁAW PARMA
-        </div>
-        <div class="main-title-description">
-            Cybersecurity Student, 
-        </div>
-        <nav>
+        </h1>
+        <p class="main-title-description">
+            Cybersecurity Student, Wannabe Cryptographer, And Lazy Bastard
+        </p>
+
+        <nav class="navbar">
             <div class="logo">
-                <img src="./assets/logo.svg" alt="navbar logo">
+                <img src="assets/logo.svg" alt="navbar logo">
             </div>
-            <div class="navbar-about">
-                ABOUT ME
-            </div>
-            <div class="navbar-projects">
-                MY PROJECTS
-            </div>
-            <div class="navbar-links">
-                LINKS?
-            </div>
-            <div class="navbar-contact">
-                CONTACT
-            </div>
+
+            <ul>
+                <li>
+                    <a href="#about">About Me</a>
+                </li>
+
+                <li>
+                    <a href="#projects">My Projects</a>
+                </li>
+
+                <li>
+                    <a href="#links">Links</a>
+                </li>
+
+                <li>
+                    <a href="#contact">Contact</a>
+                </li>
+            </ul>
         </nav>
     </header>
+
+    <main>
+        <article id="about">
+            <header class="article-header">
+                <h2 class="article-name">ABOUT ME</h2>
+            </header>
+
+            <figure class="article-image">
+                <img src="assets/pfp.png" alt="authors profile picture">
+            </figure>
+                
+            <p class="article-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </p>
+        </article>
+
+        <article id="prjects">
+            <header class="article-header">
+                <h2 class="article-name">PROJECTS AND INTERESTS</h2>
+            </header>
+
+            <div class="grid">
+                <article class="grid-item-project">
+                    <header class="grid-item-header">
+                        <img class="grid-item-image" src="assets/project.svg" alt="project icon">
+                    
+                        <h3 class="grid-item-name">COMPRESSION ALGORITHM</h3>
+
+                        <p class="grid-item-category">project</p>
+                    </header>   
+
+                    <p class="grid-item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </article>
+                
+                <article class="grid-item-interest">
+                    
+
+                    <header class="grid-item-header">
+                        <img class="grid-item-image" src="assets/interest.svg" alt="interest icon">
+
+                        <h3 class="grid-item-name">ALGEBRA</h3>
+
+                        <p class="grid-item-category">interest</p>
+                    </header>
+
+                    <p class="grid-item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </p>
+                </article>
+            </div>
+        </article>
+
+        <aside id="links">
+            <header class="aside-header">
+                <h2 class="aside-name">LINKS</h2>
+            </header>
+
+            <ul class="aside-list">
+                <li>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">Lorem ipsum dolor sit amet</a>
+                </li>
+                <li>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">consectetur adipiscing elit</a>
+                </li>
+                <li>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">sed do eiusmod tempor incididunt</a>
+                </li>
+            </ul>
+        </aside>
+
+        <footer id="contact">
+            <header class="article-header">
+                <h2 class="article-name">CONTACT</h2>
+            </header>
+        </footer>
+    </main>
 
 </body>
 </html>
