@@ -1,15 +1,16 @@
 :root {
-    /* Colors */
-    --color-bg: #212529;
-    --color-surface: #2b3035;
-    --color-surface-hover: #343a40;
-    --color-border: #3d444b;
-    --color-text: #DCE1E5;
-    --color-text-muted: #9aa4ad;
-    --color-accent: #74c0fc;     
-    --color-accent-alt: #63e6be;
-    --color-error: #ff8787;
-    --color-hypertext:#aaaaff; 
+    /* Colors - light theme (base). body.dark swaps in the dark palette,
+       and index.html starts with <body class="dark">, so dark is the default. */
+    --color-bg: #f1f3f5;
+    --color-surface: #ffffff;
+    --color-surface-hover: #e9ecef;
+    --color-border: #ced4da;
+    --color-text: #212529;
+    --color-text-muted: #5c6670;
+    --color-accent: #1971c2;
+    --color-accent-alt: #087f5b;
+    --color-error: #c92a2a;
+    --color-hypertext: #3b3bb3;
 
     --font-main: Arial, Helvetica, sans-serif;
     --font-size-h1: clamp(2rem, 1rem + 5vw, 4.5rem);
@@ -22,12 +23,35 @@
     --radius: 0rem;
     --nav-height: 6.5rem;       
     --transition: 0.2s ease;
+
+    color-scheme: light;
+}
+
+/* Dark theme (toggled by js/theme.js) */
+body.dark {
+    --color-bg: #212529;
+    --color-surface: #2b3035;
+    --color-surface-hover: #343a40;
+    --color-border: #3d444b;
+    --color-text: #DCE1E5;
+    --color-text-muted: #9aa4ad;
+    --color-accent: #74c0fc;
+    --color-accent-alt: #63e6be;
+    --color-error: #ff8787;
+    --color-hypertext: #aaaaff;
+
+    color-scheme: dark;
 }
 
 *,
 *::before,
 *::after {
     box-sizing: border-box;
+}
+
+/* Elements hidden by JS stay hidden even if a class sets display */
+[hidden] {
+    display: none !important;
 }
 
 body {
@@ -39,6 +63,7 @@ body {
     margin-top: 0;
     line-height: 1.6;
     overflow-wrap: break-word;
+    transition: background-color var(--transition), color var(--transition);
 }
 
 img {
@@ -78,6 +103,7 @@ button:focus-visible {
 .navbar ul {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-s);
     margin: 0;
     padding: 0;
@@ -96,6 +122,22 @@ button:focus-visible {
 .navbar ul a:hover {
     color: var(--color-accent);
     background-color: var(--color-surface);
+}
+
+.theme-toggle {
+    padding: 0.3rem 0.7rem;
+    font: inherit;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.theme-toggle:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 
@@ -263,7 +305,15 @@ main > aside {
     list-style: none;
 }
 
+.aside-list li {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-s);
+}
+
 .aside-list a {
+    flex: 1;
+    min-width: 0;
     display: block;
     padding: var(--space-s) var(--space-m);
     color: var(--color-hypertext);
@@ -283,19 +333,162 @@ main > aside {
     background-color: var(--color-surface-hover);
 }
 
-#weather-box,
-#calendar-box {
+.link-delete {
+    flex-shrink: 0;
+    padding: 0 var(--space-s);
+    font: inherit;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.link-delete:hover {
+    color: var(--color-error);
+    border-color: var(--color-error);
+}
+
+.links-empty {
+    margin: 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+}
+
+.link-form {
+    display: grid;
+    gap: var(--space-s);
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--color-border);
+}
+
+.link-form-title {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Weather + calendar tiles (filled by js/) */
+.widget-body {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 10rem;
-    background-color: transparent;
-    border: 2px dashed var(--color-border);
+    gap: var(--space-s);
+    min-height: 9rem;
+    text-align: center;
 }
 
 .placeholder {
     margin: 0;
     font-style: italic;
+    color: var(--color-text-muted);
+}
+
+.calendar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.calendar-weekday {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-accent);
+}
+
+.calendar-day {
+    font-size: clamp(3rem, 2rem + 4vw, 4.5rem);
+    font-weight: bold;
+}
+
+.calendar-month {
+    color: var(--color-text-muted);
+}
+
+.weather-loading {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+.weather-loading::before {
+    content: "";
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.weather-error {
+    margin: 0;
+    padding: var(--space-s) var(--space-m);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+    border-radius: var(--radius);
+}
+
+.weather-retry {
+    padding: 0.4rem 1rem;
+    font: inherit;
+    color: var(--color-text);
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+}
+
+.weather-retry:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+.weather-station {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.weather-temp {
+    margin: 0;
+    font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.weather-details {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-s);
+    width: 100%;
+    margin: var(--space-s) 0;
+}
+
+.weather-details dt {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.weather-details dd {
+    margin: 0;
+    font-weight: bold;
+}
+
+.weather-meta {
+    margin: 0;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
 }
 
@@ -306,13 +499,15 @@ main > aside {
     max-width: 40rem;
 }
 
-#contact label {
+#contact label,
+.link-form label {
     margin-top: var(--space-s);
     font-weight: bold;
 }
 
 #contact input,
-#contact textarea {
+#contact textarea,
+.link-form input {
     width: 100%;
     padding: 0.6rem 0.8rem;
     font: inherit;
@@ -328,13 +523,15 @@ main > aside {
     resize: vertical;
 }
 
-#contact ::placeholder {
+#contact ::placeholder,
+.link-form ::placeholder {
     color: var(--color-text-muted);
     opacity: 1;
 }
 
 #contact input:focus,
-#contact textarea:focus {
+#contact textarea:focus,
+.link-form input:focus {
     border-color: var(--color-accent);
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
@@ -345,7 +542,20 @@ main > aside {
     border-color: var(--color-error);
 }
 
-#contact button {
+/* link form: invalid fields are marked by js/links.js */
+.link-form input[aria-invalid="true"] {
+    border-color: var(--color-error);
+    outline-color: var(--color-error);
+}
+
+.field-error {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-error);
+}
+
+#contact button,
+.link-form button {
     justify-self: start;
     margin-top: var(--space-m);
     padding: 0.7rem 1.6rem;
@@ -359,7 +569,8 @@ main > aside {
     transition: background-color var(--transition);
 }
 
-#contact button:hover {
+#contact button:hover,
+.link-form button:hover {
     background-color: var(--color-accent-alt);
 }
 
@@ -428,6 +639,9 @@ footer {
         align-self: start;
         position: sticky;
         top: calc(var(--nav-height) + var(--space-m));
+        /* the panel scrolls on its own if the list gets long */
+        max-height: calc(100vh - var(--nav-height) - var(--space-l));
+        overflow-y: auto;
     }
 }
 
@@ -440,5 +654,6 @@ footer {
     *::before,
     *::after {
         transition: none !important;
+        animation: none !important;
     }
 }
