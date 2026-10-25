@@ -243,4 +243,8 @@ export function initLinks() {
     saveLinks(links);
     renderLinks(list, emptyMessage, links);
   });
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> lab2-remake

@@ -49,9 +49,16 @@ body.dark {
     box-sizing: border-box;
 }
 
-/* Elements hidden by JS stay hidden even if a class sets display */
-[hidden] {
-    display: none !important;
+body.light {
+    --color-bg: #989898;
+    --color-surface: #848484;
+    --color-surface-hover: #c4c4c4;
+    --color-border: #d8ecff;
+    --color-text: #212529;
+    --color-text-muted: #3d444b; 
+    --color-hypertext:#5052bf; 
+    --color-accent: #49b0ff; 
+    --color-accent-alt: #2fe2ac;
 }
 
 body {
@@ -124,22 +131,15 @@ button:focus-visible {
     background-color: var(--color-surface);
 }
 
-.theme-toggle {
-    padding: 0.3rem 0.7rem;
-    font: inherit;
+.theme-toggle{
+    display: block;
+    padding: var(--space-s) var(--space-m);
     color: var(--color-text);
-    background-color: transparent;
-    border: 1px solid var(--color-border);
+    text-decoration: none;
+    background-color: var(--color-surface);
     border-radius: var(--radius);
-    cursor: pointer;
-    transition: color var(--transition), border-color var(--transition);
+    transition: color var(--transition), background-color var(--transition);
 }
-
-.theme-toggle:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
-}
-
 
 #hero {
     padding: var(--space-xl) 0;
@@ -370,7 +370,19 @@ main > aside {
     font-size: 1.1rem;
 }
 
-/* Weather + calendar tiles (filled by js/) */
+
+
+#weather-box,
+#calendar-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    min-height: 9rem;
+    text-align: center;
+}
+
 .widget-body {
     display: flex;
     flex-direction: column;
@@ -397,7 +409,7 @@ main > aside {
 .calendar-weekday {
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--color-accent);
+    color: var(--color-text);
 }
 
 .calendar-day {
@@ -406,7 +418,7 @@ main > aside {
 }
 
 .calendar-month {
-    color: var(--color-text-muted);
+    color: var(--color-text);
 }
 
 .weather-loading {
@@ -491,6 +503,8 @@ main > aside {
     font-size: 0.8rem;
     color: var(--color-text-muted);
 }
+
+
 
 
 #contact form {
