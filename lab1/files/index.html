@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="style.css">
+    
+
+    <title>szachmaty.ru</title>
+    <meta name="description" content="A little website that i made myself">
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+</head>
+
+<body>
+    <nav class="navbar">
+            <a class="logo" href="#hero">
+                <!--<img class="navbar-logo" src="assets/logo.svg" alt="navbar logo">-->
+                <img class="navbar-logo" src="assets/placeholder.svg" alt="placeholder">
+            </a>
+
+        <ul>
+            <li>
+                <a href="#about">About Me</a>
+            </li>
+
+            <li>
+                <a href="#projects">My Projects</a>
+            </li>
+
+            <li>
+                <a href="#links">Links</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+            <li>
+                <a href="#about">About Me</a>
+            </li>
+        </ul>
+    </nav>
+
+    <header id="hero">
+        <h1 class="main-title">
+            STANISŁAW PARMA
+        </h1>
+        <p class="main-title-description">
+            Cybersecurity Student
+        </p>
+    </header>
+
+    <main>
+        <section id="about">
+            <header class="article-header">
+                <h2 class="article-name">ABOUT ME</h2>
+            </header>
+
+            <figure class="article-image">
+                <!--<img class="pfp" src="assets/pfp.png" alt="authors profile picture">-->
+                <img class="pfp" src="assets/placeholder.svg" alt="authors profile picture">
+            </figure>
+                
+            <p class="article-paragraph">I am a second year cybersecurity student at the AGH University of Cracow. I know linear algebra, modular algebra and basic cryptoanalysis methods. As for my interests i like doing cryptography and play boardgames in my free time.
+            </p>
+        </section>
+
+        <section id="projects">
+            <header class="article-header">
+                <h2 class="article-name">PROJECTS AND INTERESTS</h2>
+            </header>
+
+            <div class="grid">
+                <article class="grid-item-project">
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/project.svg" alt="project icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="project icon">
+                    
+                        <h3 class="grid-item-name">Hand made PNG decompressor and ASCII renderer</h3>
+
+                        <p class="grid-item-category">project</p>
+                    </header>   
+
+                    <p class="grid-item-description">
+                        I made my own PNG decompression algorithm, for which i had to learn all about gzip compression and dynamic huffman trees. The project decompresses the PNG image into a set of hex values representing the RGB values and then renders the image in a console by typing out different ascii signs depending on the luminance of the pixel.
+                    </p>
+                </article>
+                
+                <article class="grid-item-interest">
+                    
+
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/interest.svg" alt="interest icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="interest icon">
+
+                        <h3 class="grid-item-name">CRYPTOANALYSIS</h3>
+
+                        <p class="grid-item-category">interest</p>
+                    </header>
+
+                    <p class="grid-item-description">In my free time i like learning about cryptoanalysis and breaking weak ciphers.
+                    </p>
+                </article>
+
+                <article class="grid-item-interest">
+                    
+
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/interest.svg" alt="interest icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="interest icon">
+
+                        <h3 class="grid-item-name">BOARDGAMES</h3>
+
+                        <p class="grid-item-category">interest</p>
+                    </header>
+
+                    <p class="grid-item-description">I own many different boardgames, all of them way more advanced than monopoly or catan. Each one usually lasts up to several hours.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <aside id="links">
+            <header class="aside-header">
+                <h2 class="aside-name">LINKS</h2>
+            </header>
+
+            <ul class="aside-list">
+                <li>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">link to github</a>
+                </li>
+                <li>
+                    <a href="https://developer.mozilla.org/en-US/" target="_blank" rel="noopener noreferrer">clink to MDN</a>
+                </li>
+                <li>
+                    <a href="https://owasp.org" target="_blank" rel="noopener noreferrer">link to OWASP</a>
+                </li>
+            </ul>
+        </aside>
+
+        <section id="weather-box">
+            <p class="placeholder">this is placeholder text</p>
+        </section>
+
+        <section id="calendar-box">
+            <p class="placeholder">this is placeholder text</p>
+        </section>
+
+        <section id="contact">
+            <header class="article-header">
+                <h2 class="article-name">CONTACT</h2>
+            </header>
+
+            <form action="/submit" method="POST" autocomplete="on">
+                <label for="name-and-surname">Name and Surname:</label>
+                <input type="text" id="name-and-surname" name="name-and-surname" placeholder="John Website" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="example.mail@mailprovider.com" required>
+
+                <label for="message">Your message:</label>
+                <textarea id="message" name="message" minlength="10" maxlength="1000"  placeholder="Type in your message here (must be 10-1000 characters)" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Stanisław Parma</p>
+    </footer>
+
+</body>
+</html>
