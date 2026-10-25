@@ -11,14 +11,13 @@
     <meta name="description" content="A little website that i made myself">
     <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
 
-    <script src="main.js" defer></script>
+    <script src="/lab1/js/main.js" type="module" defer></script>
 </head>
 
-<body>
+<body class="light">
     <nav class="navbar">
             <a class="logo" href="#hero">
-                <!--<img class="navbar-logo" src="assets/logo.svg" alt="navbar logo">-->
-                <img class="navbar-logo" src="assets/logo_darkmode.svg" alt="placeholder">
+                <img class="navbar-logo" src="assets/logo_darkmode.svg" alt="navbar logo">
             </a>
 
         <ul>
@@ -39,7 +38,7 @@
             </li>
 
             <li>
-                <button class="theme-swapper">button</button>
+                <button class="theme-toggle"><b id="theme-toggle">LIGHT</b></button>
             </li>
         </ul>
     </nav>
@@ -64,7 +63,7 @@
                 <img class="pfp" src="assets/logo_darkmode.svg" data-src-light="assets/logo.svg" data-src-dark="assets/logo_darkmode.svg" alt="authors profile picture">
             </figure>
                 
-            <p class="article-paragraph">I am a second year cybersecurity student at the AGH University of Cracow. I know linear algebra, modular algebra and basic cryptoanalysis methods. As for my interests i like doing cryptography and play boardgames in my free time.
+            <p class="article-paragraph">I am a second year cybersecurity student at the AGH University of Cracow. I know linear algebra, modular arythmetic and basic cryptoanalysis methods. As for my interests i like doing cryptography and play boardgames in my free time.
             </p>
         </section>
 
@@ -126,12 +125,13 @@
             </div>
         </section>
 
-        <aside id="links">
+         <aside id="links">
             <header class="aside-header">
                 <h2 class="aside-name">LINKS</h2>
             </header>
 
-            <ul class="aside-list">
+            <!-- Starting links; js/links.js takes over the list on the first visit -->
+            <ul class="aside-list" id="links-list">
                 <li>
                     <a href="https://github.com" target="_blank" rel="noopener noreferrer">link to github</a>
                 </li>
@@ -142,14 +142,42 @@
                     <a href="https://owasp.org" target="_blank" rel="noopener noreferrer">link to OWASP</a>
                 </li>
             </ul>
-        </aside>
 
+            <p class="links-empty" id="links-empty" hidden>No links yet. Add one below.</p>
+
+            <form id="link-form" class="link-form" novalidate>
+                <h3 class="link-form-title">Add a link</h3>
+
+                <label for="link-name">Name</label>
+                <input type="text" id="link-name" name="link-name" placeholder="e.g. OWASP" autocomplete="off" aria-describedby="link-name-error">
+                <p class="field-error" id="link-name-error" aria-live="polite" hidden></p>
+
+                <label for="link-url">URL</label>
+                <input type="url" id="link-url" name="link-url" placeholder="https://owasp.org" autocomplete="off" aria-describedby="link-url-error">
+                <p class="field-error" id="link-url-error" aria-live="polite" hidden></p>
+
+                <button type="submit">Add link</button>
+            </form>
+        </aside>
+        
         <section id="weather-box">
-            <p class="placeholder">this is placeholder text</p>
+            <header class="article-header">
+                <h2 class="article-name" id="weather-title">WEATHER</h2>
+            </header>
+
+            <div class="widget-body" aria-live="polite">
+                <p class="placeholder">Weather data loads here.</p>
+            </div>
         </section>
 
         <section id="calendar-box">
-            <p class="placeholder">this is placeholder text</p>
+            <header class="article-header">
+                <h2 class="article-name" id="calendar-title">TODAY</h2>
+            </header>
+
+            <div class="widget-body">
+                <p class="placeholder">Today's date loads here.</p>
+            </div>
         </section>
 
         <section id="contact">
