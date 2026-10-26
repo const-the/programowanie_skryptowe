@@ -1,16 +1,15 @@
 :root {
-    /* Colors - light theme (base). body.dark swaps in the dark palette,
-       and index.html starts with <body class="dark">, so dark is the default. */
-    --color-bg: #f1f3f5;
-    --color-surface: #ffffff;
-    --color-surface-hover: #e9ecef;
-    --color-border: #ced4da;
-    --color-text: #212529;
-    --color-text-muted: #5c6670;
-    --color-accent: #1971c2;
-    --color-accent-alt: #087f5b;
-    --color-error: #c92a2a;
-    --color-hypertext: #3b3bb3;
+    /* Colors */
+    --color-bg: #212529;
+    --color-surface: #2b3035;
+    --color-surface-hover: #343a40;
+    --color-border: #3d444b;
+    --color-text: #DCE1E5;
+    --color-text-muted: #9aa4ad;
+    --color-accent: #74c0fc;     
+    --color-accent-alt: #63e6be;
+    --color-error: #ff8787;
+    --color-hypertext:#aaaaff; 
 
     --font-main: Arial, Helvetica, sans-serif;
     --font-size-h1: clamp(2rem, 1rem + 5vw, 4.5rem);
@@ -23,24 +22,6 @@
     --radius: 0rem;
     --nav-height: 6.5rem;       
     --transition: 0.2s ease;
-
-    color-scheme: light;
-}
-
-/* Dark theme (toggled by js/theme.js) */
-body.dark {
-    --color-bg: #212529;
-    --color-surface: #2b3035;
-    --color-surface-hover: #343a40;
-    --color-border: #3d444b;
-    --color-text: #DCE1E5;
-    --color-text-muted: #9aa4ad;
-    --color-accent: #74c0fc;
-    --color-accent-alt: #63e6be;
-    --color-error: #ff8787;
-    --color-hypertext: #aaaaff;
-
-    color-scheme: dark;
 }
 
 *,
@@ -70,7 +51,6 @@ body {
     margin-top: 0;
     line-height: 1.6;
     overflow-wrap: break-word;
-    transition: background-color var(--transition), color var(--transition);
 }
 
 img {
@@ -78,6 +58,8 @@ img {
     max-width: 100%;
     height: auto;
 }
+
+
 
 a:focus-visible,
 button:focus-visible {
@@ -110,7 +92,6 @@ button:focus-visible {
 .navbar ul {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
     gap: var(--space-s);
     margin: 0;
     padding: 0;
@@ -207,18 +188,20 @@ main > aside {
     grid-column: 1 / -1;
 }
 
+.pfp {
+    width: 100%;
+    max-width: 24rem;
+    height: auto;
+    margin-inline: auto;
+    border-radius: var(--radius);
+}
+
 .article-image {
     margin: 0;
 }
 
 .article-image img {
-    width: 100%;
-    max-width: 16rem;
-    aspect-ratio: 1;
-    object-fit: cover;
     margin-inline: auto;
-    border-radius: var(--radius);
-    border: 2px solid var(--color-border);
 }
 
 .article-paragraph {
@@ -375,12 +358,11 @@ main > aside {
 #weather-box,
 #calendar-box {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-s);
-    min-height: 9rem;
-    text-align: center;
+    min-height: 10rem;
+    background-color: transparent;
+    border: 2px dashed var(--color-border);
 }
 
 .widget-body {
@@ -513,15 +495,13 @@ main > aside {
     max-width: 40rem;
 }
 
-#contact label,
-.link-form label {
+#contact label {
     margin-top: var(--space-s);
     font-weight: bold;
 }
 
 #contact input,
-#contact textarea,
-.link-form input {
+#contact textarea {
     width: 100%;
     padding: 0.6rem 0.8rem;
     font: inherit;
@@ -537,15 +517,13 @@ main > aside {
     resize: vertical;
 }
 
-#contact ::placeholder,
-.link-form ::placeholder {
+#contact ::placeholder {
     color: var(--color-text-muted);
     opacity: 1;
 }
 
 #contact input:focus,
-#contact textarea:focus,
-.link-form input:focus {
+#contact textarea:focus {
     border-color: var(--color-accent);
     outline: 2px solid var(--color-accent);
     outline-offset: 2px;
@@ -556,20 +534,7 @@ main > aside {
     border-color: var(--color-error);
 }
 
-/* link form: invalid fields are marked by js/links.js */
-.link-form input[aria-invalid="true"] {
-    border-color: var(--color-error);
-    outline-color: var(--color-error);
-}
-
-.field-error {
-    margin: 0;
-    font-size: 0.85rem;
-    color: var(--color-error);
-}
-
-#contact button,
-.link-form button {
+#contact button {
     justify-self: start;
     margin-top: var(--space-m);
     padding: 0.7rem 1.6rem;
@@ -583,8 +548,7 @@ main > aside {
     transition: background-color var(--transition);
 }
 
-#contact button:hover,
-.link-form button:hover {
+#contact button:hover {
     background-color: var(--color-accent-alt);
 }
 
@@ -653,9 +617,6 @@ footer {
         align-self: start;
         position: sticky;
         top: calc(var(--nav-height) + var(--space-m));
-        /* the panel scrolls on its own if the list gets long */
-        max-height: calc(100vh - var(--nav-height) - var(--space-l));
-        overflow-y: auto;
     }
 }
 
@@ -668,6 +629,5 @@ footer {
     *::before,
     *::after {
         transition: none !important;
-        animation: none !important;
     }
 }

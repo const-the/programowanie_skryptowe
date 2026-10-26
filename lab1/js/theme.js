@@ -1,11 +1,11 @@
 // js/theme.js
 /**
- * Theme module (Dark / Light mode).
- *
- * - The page starts dark (<body class="dark"> in index.html), so the default
- *   look appears immediately, before any JavaScript runs.
- * - A saved preference from localStorage is applied on load.
- * - The #theme-toggle button switches the "dark" class on <body> and saves the choice.
+ * Moduł motywu (Dark / Light Mode).
+ * 
+ * Odpowiedzialność:
+ * - Reakcja na kliknięcie kontrolki motywu w interfejsie
+ * - Przełączanie klasy motywu (np. 'dark') na elemencie <body>
+ * - Trwały zapis i odczyt preferencji użytkownika w localStorage
  */
 "use strict"
 const ITEM_NAME = "theme";
