@@ -15,7 +15,7 @@ from app.models.user import User
 from app.models.link import Link
 from app.schemas.link import LinkCreate, LinkResponse
 
-router = APIRouter(prefix="/api/links", tags=["Links"])
+router = APIRouter(tags=["Links"])
 
 
 # TODO (Zadanie 3): Zaimplementuj operacje CRUD z ochroną przed BOLA:
@@ -25,7 +25,6 @@ router = APIRouter(prefix="/api/links", tags=["Links"])
 #    - Wykonaj zapytanie: select(Link).where(Link.owner_id == current_user.id)
 #    - Zwróć list[LinkResponse] ze statusem 200 OK
 #
-@router.get()
 # 2. POST /api/links
 #    - Przyjmij link_data: LinkCreate, current_user oraz db
 #    - Utwórz instancję Link przypisując owner_id = current_user.id
@@ -66,7 +65,7 @@ def create_link(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    link = Link(**link_data.model_dump(), owner_id=current_user.id)
+    link = Link(**link_data.model_dump(mode="json"), owner_id=current_user.id)
     db.add(link)
     db.commit()
     db.refresh(link)

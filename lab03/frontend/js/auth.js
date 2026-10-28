@@ -125,6 +125,7 @@ async function checkSession() {
  */
 export function initAuth() {
   // Gwarancja obecności modala w drzewie DOM
+  console.log("adawdawd")
   ensureModalExists();
 
   const authDialog = document.querySelector("#authDialog");
@@ -192,6 +193,8 @@ export function initAuth() {
     authCloseBtn.addEventListener("click", closeDialog);
   }
 
+  console.log("erbebrerberb")
+
   if (authSwitchBtn) {
     authSwitchBtn.addEventListener("click", () => setMode(!isLoginMode));
   }
@@ -252,6 +255,8 @@ export function initAuth() {
       }
     });
   }
+
+  console.log("w3w3rw3rw3rw3r")
 
   // Globalny nasłuch wygaśnięcia sesji (HTTP 401 z backendu)
   onUnauthorized(() => {

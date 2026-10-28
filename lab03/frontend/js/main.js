@@ -25,6 +25,7 @@ function app() {
   // 4. Inicjalizacja rejestru linków (formularz, lista, zdarzenia)
   initLinks();
 
+  console.log("adwawd")
   initAuth();
 }
 

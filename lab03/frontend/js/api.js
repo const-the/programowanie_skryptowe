@@ -148,6 +148,9 @@ export const linksApi = {
   async getAll() {
     // TODO (Zadanie): Pobierz listę odnośników bieżącego użytkownika (GET /links)
     // Wskazówka: Zobacz implementację todosApi.getAll() w projekcie z Wykładu 3.
+    const res = await request("/links");
+    if (!res.ok) throw new Error("Błąd pobierania linków.");
+    return res.json();
   },
 
   /**
@@ -156,9 +159,14 @@ export const linksApi = {
    * @returns {Promise<Object>} Utworzony obiekt odnośnika z bazy
    */
   async create(linkData) {
-    // TODO (Zadanie): Wyślij nowy odnośnik na serwer (POST /links)
-    // Pamiętaj o przekazaniu obiektu { title, url } w ciele JSON.
-  },
+  const res = await request("/links", {
+    method: "POST",
+    body: JSON.stringify(linkData)          // ✅ linkData = { title, url }
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Niepoprawne dane odnośnika.");
+  return data;
+},
 
   /**
    * Usuwa wybrany odnośnik z bazy serwera (DELETE /links/{id}).
@@ -167,5 +175,8 @@ export const linksApi = {
    */
   async delete(linkId) {
     // TODO (Zadanie): Usuń odnośnik po jego identyfikatorze ID (DELETE /links/{id})
+    const res = await request(`/links/${linkId}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Błąd usuwania linku.");
+    return true;
   }
 };

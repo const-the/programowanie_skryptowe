@@ -1,144 +1,64 @@
-// js/links.js
+import { linksApi } from "./api.js";
+import { onLoginSuccess, onLogoutSuccess } from "./auth.js";
+ 
+const MIN_NAME_LENGTH = 3;
+const MAX_NAME_LENGTH = 100; // zgodnie z max_length w schemacie LinkCreate
+ 
 /**
- * Moduł dynamicznego rejestru odnośników w panelu bocznym (<aside id="links">).
- *
- * Odpowiedzialność:
- * - Obsługa formularza dodawania odnośnika (zdarzenie 'submit', preventDefault)
- * - Walidacja danych (minimalna długość nazwy, weryfikacja poprawności URL za pomocą sanitizeUrl)
- * - Dynamiczne renderowanie listy wpisów w DOM (Zero-XSS: createElement, textContent, append, rel="noopener noreferrer")
- * - Obsługa usuwania elementów za pomocą delegacji zdarzeń (Event Delegation z użyciem e.target.closest)
- * - Zapewnienie trwałości rejestru linków w localStorage (JSON.parse / JSON.stringify)
- */
-
-/**
- * Pomocnicza funkcja weryfikująca i sanityzująca adres URL wprowadzony przez użytkownika:
- * - Wymaga podania pełnego adresu z bezpiecznym protokołem (http: lub https:)
- * - Odrzuca adresy niepoprawne składniowo oraz niebezpieczne pseudoprotokoły (javascript:, data:)
- * - Zwraca znormalizowany, bezpieczny ciąg URL (href) lub null w przypadku nieprawidłowego adresu
+ * Weryfikuje i normalizuje adres URL (biała lista protokołów http/https).
+ * Używana przy walidacji formularza oraz ponownie przy renderowaniu danych z serwera
+ * (obrona w głąb: nie ufamy ślepo nawet własnemu API).
  * @param {string} urlString
  * @returns {string|null}
  */
 function sanitizeUrl(urlString) {
-  // .trim() usuwa białe znaki (spacje, tabulatory, nowe linie) z początku i końca tekstu
-  const trimmed = urlString.trim();
+  const trimmed = String(urlString ?? "").trim();
   if (!trimmed) return null;
-
+ 
   try {
-    // Krok 1 (Weryfikacja składni): Natywny parser new URL() wymaga absolutnego adresu ze schematem.
-    // Jeśli ciąg nie posiada protokołu (np. "onet.pl") lub zawiera błędy składniowe,
-    // konstruktor rzuca wyjątek TypeError: Invalid URL, który bezpiecznie przechwytujemy w bloku catch.
     const parsed = new URL(trimmed);
-
-    // Krok 2 (Biała lista protokołów / AppSec): Parser new URL() akceptuje każdy poprawny schemat URI,
-    // w tym niebezpieczne dla bezpieczeństwa DOM wektory XSS (np. "javascript:alert(1)", "data:text/html,...").
-    // Dlatego bezwzględnie weryfikujemy białą listę: dopuszczamy wyłącznie protokoły "http:" oraz "https:".
     if (parsed.protocol === "http:" || parsed.protocol === "https:") {
       return parsed.href;
     }
-
     return null;
   } catch {
-    // Przechwycenie błędu składniowego rzuconego przez new URL()
     return null;
   }
 }
-
-/* ---------- Storage ---------- */
-
-const STORAGE_KEY = "links-registry";
-const MIN_NAME_LENGTH = 3;
-const MAX_NAME_LENGTH = 60;
-
-function createId() {
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
-function isValidEntry(entry) {
-  return (
-    entry !== null &&
-    typeof entry === "object" &&
-    typeof entry.id === "string" &&
-    typeof entry.name === "string" &&
-    typeof entry.url === "string"
-  );
-}
-
-/**
- * Returns the saved list, or null when nothing usable is saved yet.
- * localStorage can be edited by hand in DevTools, so every stored URL
- * goes through sanitizeUrl() again before it reaches the page.
- */
-function loadLinks() {
-  let raw;
-  try {
-    raw = localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-  if (raw === null) return null;
-
-  try {
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return null;
-
-    return parsed
-      .filter(isValidEntry)
-      .map((entry) => ({ ...entry, url: sanitizeUrl(entry.url) }))
-      .filter((entry) => entry.url !== null);
-  } catch {
-    // Corrupted JSON: fall back to the default links
-    return null;
-  }
-}
-
-function saveLinks(links) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
-  } catch {
-    // Storage blocked: the list works for this visit but won't be remembered
-  }
-}
-
-// On the first visit, the links written in index.html become the starting list
-function readLinksFromHtml(list) {
-  return Array.from(list.querySelectorAll("a"))
-    .map((anchor) => ({
-      id: createId(),
-      name: anchor.textContent.trim(),
-      url: sanitizeUrl(anchor.getAttribute("href") ?? ""),
-    }))
-    .filter((entry) => entry.name && entry.url !== null);
-}
-
+ 
 /* ---------- Rendering (Zero-XSS: no innerHTML) ---------- */
-
+ 
 function createLinkItem(link) {
   const item = document.createElement("li");
-  item.dataset.id = link.id;
-
+  item.dataset.id = String(link.id);
+ 
   const anchor = document.createElement("a");
   anchor.href = link.url;
   anchor.target = "_blank";
   anchor.rel = "noopener noreferrer";
-  anchor.textContent = link.name;
-
+  anchor.textContent = link.title;
+ 
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.className = "link-delete";
   deleteButton.textContent = "Delete";
-  deleteButton.setAttribute("aria-label", `Delete ${link.name}`);
-
+  deleteButton.setAttribute("aria-label", `Delete ${link.title}`);
+ 
   item.append(anchor, deleteButton);
   return item;
 }
-
+ 
 function renderLinks(list, emptyMessage, links) {
-  list.replaceChildren(...links.map(createLinkItem));
-  emptyMessage.hidden = links.length > 0;
+  const safeLinks = links
+    .map((link) => ({ ...link, url: sanitizeUrl(link.url) }))
+    .filter((link) => link.url !== null);
+ 
+  list.replaceChildren(...safeLinks.map(createLinkItem));
+  emptyMessage.hidden = safeLinks.length > 0;
 }
-
+ 
 /* ---------- Validation ---------- */
-
+ 
 function validateName(name) {
   // Spaces don't count toward the minimum length
   if (name.replace(/\s/g, "").length < MIN_NAME_LENGTH) {
@@ -149,12 +69,12 @@ function validateName(name) {
   }
   return null;
 }
-
+ 
 function validateUrl(value, links) {
   if (!value.trim()) {
     return { error: "Enter a URL.", url: null };
   }
-
+ 
   const url = sanitizeUrl(value);
   if (url === null) {
     return {
@@ -162,29 +82,64 @@ function validateUrl(value, links) {
       url: null,
     };
   }
-
-  if (links.some((link) => link.url === url)) {
+ 
+  if (links.some((link) => sanitizeUrl(link.url) === url)) {
     return { error: "This link is already on the list.", url: null };
   }
-
+ 
   return { error: null, url };
 }
-
+ 
 function showError(input, errorEl, message) {
   input.setAttribute("aria-invalid", "true");
   errorEl.textContent = message;
   errorEl.hidden = false;
 }
-
+ 
 function clearError(input, errorEl) {
   input.removeAttribute("aria-invalid");
   errorEl.textContent = "";
   errorEl.hidden = true;
 }
-
+ 
+/* ---------- Status message (API errors, loading) ---------- */
+ 
+/**
+ * Komunikat o stanie komunikacji z API. Tworzony dynamicznie,
+ * więc nie wymaga zmian w index.html.
+ */
+function ensureStatusElement(panel, form) {
+  let status = panel.querySelector("#links-status");
+  if (!status) {
+    status = document.createElement("p");
+    status.id = "links-status";
+    status.className = "field-error";
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    status.hidden = true;
+    panel.insertBefore(status, form);
+  }
+  return status;
+}
+ 
+function showStatus(statusEl, message) {
+  statusEl.textContent = message;
+  statusEl.hidden = false;
+}
+ 
+function clearStatus(statusEl) {
+  statusEl.textContent = "";
+  statusEl.hidden = true;
+}
+ 
+function errorMessage(err, fallback) {
+  return err instanceof Error && err.message ? err.message : fallback;
+}
+ 
 /* ---------- Init ---------- */
-
+ 
 export function initLinks() {
+  const panel = document.querySelector("#links");
   const form = document.querySelector("#link-form");
   const list = document.querySelector("#links-list");
   const emptyMessage = document.querySelector("#links-empty");
@@ -192,55 +147,137 @@ export function initLinks() {
   const urlInput = document.querySelector("#link-url");
   const nameError = document.querySelector("#link-name-error");
   const urlError = document.querySelector("#link-url-error");
-
-  if (!form || !list || !emptyMessage || !nameInput || !urlInput || !nameError || !urlError) {
+ 
+  if (!panel || !form || !list || !emptyMessage || !nameInput || !urlInput || !nameError || !urlError) {
     return;
   }
-
-  let links = loadLinks() ?? readLinksFromHtml(list);
-  renderLinks(list, emptyMessage, links);
-
+ 
+  const submitButton = form.querySelector('button[type="submit"]');
+  const statusEl = ensureStatusElement(panel, form);
+ 
+  // Stan modułu: wyłącznie dane z serwera bieżącej sesji
+  let links = [];
+ 
+  // Licznik sesji: chroni przed sytuacją, w której odpowiedź z serwera dociera
+  // już po wylogowaniu i prywatne dane trafiłyby z powrotem do DOM
+  let session = 0;
+ 
+  // Stan początkowy: panel ukryty, lista pusta (także gdy w HTML zostały statyczne linki)
+  panel.classList.add("hidden");
+  list.replaceChildren();
+  emptyMessage.hidden = true;
+ 
+  /* ----- Reakcja na zmianę tożsamości (auth.js) ----- */
+ 
+  onLoginSuccess(async () => {
+    const current = ++session;
+ 
+    panel.classList.remove("hidden");
+    clearStatus(statusEl);
+    showStatus(statusEl, "Loading your links…");
+ 
+    try {
+      const data = await linksApi.getAll();
+      if (current !== session) return; // użytkownik zdążył się wylogować
+ 
+      links = Array.isArray(data) ? data : [];
+      clearStatus(statusEl);
+      renderLinks(list, emptyMessage, links);
+    } catch (err) {
+      if (current !== session) return;
+      links = [];
+      renderLinks(list, emptyMessage, links);
+      emptyMessage.hidden = true;
+      showStatus(statusEl, errorMessage(err, "Couldn't load your links from the server."));
+    }
+  });
+ 
+  onLogoutSuccess(() => {
+    session++;
+    links = [];
+ 
+    // Fizyczne usunięcie prywatnych danych z drzewa DOM
+    list.replaceChildren();
+    emptyMessage.hidden = true;
+    form.reset();
+    clearError(nameInput, nameError);
+    clearError(urlInput, urlError);
+    clearStatus(statusEl);
+ 
+    panel.classList.add("hidden");
+  });
+ 
+  /* ----- Formularz dodawania ----- */
+ 
   // Remove the error as soon as the user starts fixing the field
   nameInput.addEventListener("input", () => clearError(nameInput, nameError));
   urlInput.addEventListener("input", () => clearError(urlInput, urlError));
-
-  form.addEventListener("submit", (event) => {
+ 
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const name = nameInput.value.trim();
-    const nameMessage = validateName(name);
+    clearStatus(statusEl);
+ 
+    const title = nameInput.value.trim();
+    const nameMessage = validateName(title);
     const { error: urlMessage, url } = validateUrl(urlInput.value, links);
-
+ 
     if (nameMessage) showError(nameInput, nameError, nameMessage);
     else clearError(nameInput, nameError);
-
+ 
     if (urlMessage) showError(urlInput, urlError, urlMessage);
     else clearError(urlInput, urlError);
-
+ 
     if (nameMessage || urlMessage) {
       (nameMessage ? nameInput : urlInput).focus();
       return;
     }
-
-    links = [...links, { id: createId(), name, url }];
-    saveLinks(links);
-    renderLinks(list, emptyMessage, links);
-
-    form.reset();
-    clearError(nameInput, nameError);
-    clearError(urlInput, urlError);
-    nameInput.focus();
+ 
+    const current = session;
+    if (submitButton) submitButton.disabled = true;
+ 
+    try {
+      // owner_id NIE jest wysyłany – serwer bierze go z tokena sesji
+      const created = await linksApi.create({ title, url });
+      if (current !== session) return;
+ 
+      links = [...links, created];
+      renderLinks(list, emptyMessage, links);
+ 
+      form.reset();
+      clearError(nameInput, nameError);
+      clearError(urlInput, urlError);
+      nameInput.focus();
+    } catch (err) {
+      if (current !== session) return;
+      showStatus(statusEl, errorMessage(err, "Couldn't save the link. Try again."));
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   });
-
-  // Event delegation: one listener on the list handles every Delete button,
-  // including buttons created later
-  list.addEventListener("click", (event) => {
+ 
+  /* ----- Usuwanie (Event Delegation) ----- */
+ 
+  list.addEventListener("click", async (event) => {
     const button = event.target.closest(".link-delete");
     if (!button || !list.contains(button)) return;
-
-    const id = button.closest("li")?.dataset.id;
-    links = links.filter((link) => link.id !== id);
-    saveLinks(links);
-    renderLinks(list, emptyMessage, links);
+ 
+    const id = Number(button.closest("li")?.dataset.id);
+    if (!Number.isInteger(id)) return;
+ 
+    const current = session;
+    clearStatus(statusEl);
+    button.disabled = true;
+ 
+    try {
+      await linksApi.delete(id);
+      if (current !== session) return;
+ 
+      links = links.filter((link) => link.id !== id);
+      renderLinks(list, emptyMessage, links);
+    } catch (err) {
+      if (current !== session) return;
+      button.disabled = false;
+      showStatus(statusEl, errorMessage(err, "Couldn't delete the link. Try again."));
+    }
   });
 }
