@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    
+
+    <title>szachmaty.ru</title>
+    <meta name="description" content="A little website that i made myself">
+    <link rel="icon" type="image/svg+xml" href="./assets/logo.svg">
+
+    <script src="/lab1/js/main.js" type="module" defer></script>
+</head>
+
+<body class="light">
+    <nav class="navbar">
+            <a class="logo" href="#hero">
+                <img class="navbar-logo" src="assets/logo_darkmode.svg" alt="navbar logo">
+            </a>
+
+        <ul>
+            <li>
+                <a href="#about">About Me</a>
+            </li>
+
+            <li>
+                <a href="#projects">My Projects</a>
+            </li>
+
+            <li>
+                <a href="#links">Links</a>
+            </li>
+
+            <li>
+                <a href="#contact">Contact</a>
+            </li>
+
+            <li>
+                <button class="theme-toggle"><b id="theme-toggle">LIGHT</b></button>
+            </li>
+            
+            <li>
+                <div id="userSession" class="user-session">
+                    <button id="loginBtn" type="button">Zaloguj się</button>
+  
+                    <div id="userInfo" class="user-info hidden">
+                        <span>Zalogowany: <strong id="loggedUsername">--</strong></span>
+                        <button id="logoutBtn" type="button">Wyloguj</button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+    <header id="hero">
+        <h1 class="main-title">
+            STANISŁAW PARMA
+        </h1>
+        <p class="main-title-description">
+            Cybersecurity Student
+        </p>
+    </header>
+
+    <main>
+        <section id="about">
+            <header class="article-header">
+                <h2 class="article-name">ABOUT ME</h2>
+            </header>
+
+            <figure class="article-image">
+                <!--<img class="pfp" src="assets/pfp.png" alt="authors profile picture">-->
+                <img class="pfp" src="assets/logo_darkmode.svg" data-src-light="assets/logo.svg" data-src-dark="assets/logo_darkmode.svg" alt="authors profile picture">
+            </figure>
+                
+            <p class="article-paragraph">I am a second year cybersecurity student at the AGH University of Cracow. I know linear algebra, modular arythmetic and basic cryptoanalysis methods. As for my interests i like doing cryptography and play boardgames in my free time.
+            </p>
+        </section>
+
+        <section id="projects">
+            <header class="article-header">
+                <h2 class="article-name">PROJECTS AND INTERESTS</h2>
+            </header>
+
+            <div class="grid">
+                <article class="grid-item-project">
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/project.svg" alt="project icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="project icon">
+                    
+                        <h3 class="grid-item-name">Hand made PNG decompressor and ASCII renderer</h3>
+
+                        <p class="grid-item-category">project</p>
+                    </header>   
+
+                    <p class="grid-item-description">
+                        I made my own PNG decompression algorithm, for which i had to learn all about gzip compression and dynamic huffman trees. The project decompresses the PNG image into a set of hex values representing the RGB values and then renders the image in a console by typing out different ascii signs depending on the luminance of the pixel.
+                    </p>
+                </article>
+                
+                <article class="grid-item-interest">
+                    
+
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/interest.svg" alt="interest icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="interest icon">
+
+                        <h3 class="grid-item-name">CRYPTOANALYSIS</h3>
+
+                        <p class="grid-item-category">interest</p>
+                    </header>
+
+                    <p class="grid-item-description">In my free time i like learning about cryptoanalysis and breaking weak ciphers.
+                    </p>
+                </article>
+
+                <article class="grid-item-interest">
+                    
+
+                    <header class="grid-item-header">
+                        <!--<img class="grid-item-image" src="assets/interest.svg" alt="interest icon">-->
+
+                        <img class="grid-item-image" src="assets/placeholder.svg" alt="interest icon">
+
+                        <h3 class="grid-item-name">BOARDGAMES</h3>
+
+                        <p class="grid-item-category">interest</p>
+                    </header>
+
+                    <p class="grid-item-description">I own many different boardgames, all of them way more advanced than monopoly or catan. Each one usually lasts up to several hours.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+         <aside id="links">
+            <header class="aside-header">
+                <h2 class="aside-name">LINKS</h2>
+            </header>
+
+            <!-- Starting links; js/links.js takes over the list on the first visit -->
+            <ul class="aside-list" id="links-list">
+                <li>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">link to github</a>
+                </li>
+                <li>
+                    <a href="https://developer.mozilla.org/en-US/" target="_blank" rel="noopener noreferrer">clink to MDN</a>
+                </li>
+                <li>
+                    <a href="https://owasp.org" target="_blank" rel="noopener noreferrer">link to OWASP</a>
+                </li>
+            </ul>
+
+            <p class="links-empty" id="links-empty" hidden>No links yet. Add one below.</p>
+
+            <form id="link-form" class="link-form" novalidate>
+                <h3 class="link-form-title">Add a link</h3>
+
+                <label for="link-name">Name</label>
+                <input type="text" id="link-name" name="link-name" placeholder="e.g. OWASP" autocomplete="off" aria-describedby="link-name-error">
+                <p class="field-error" id="link-name-error" aria-live="polite" hidden></p>
+
+                <label for="link-url">URL</label>
+                <input type="url" id="link-url" name="link-url" placeholder="https://owasp.org" autocomplete="off" aria-describedby="link-url-error">
+                <p class="field-error" id="link-url-error" aria-live="polite" hidden></p>
+
+                <button type="submit">Add link</button>
+            </form>
+        </aside>
+        
+        <section id="weather-box">
+            <header class="article-header">
+                <h2 class="article-name" id="weather-title">WEATHER</h2>
+            </header>
+
+            <div class="widget-body" aria-live="polite">
+                <p class="placeholder">Weather data loads here.</p>
+            </div>
+        </section>
+
+        <section id="calendar-box">
+            <header class="article-header">
+                <h2 class="article-name" id="calendar-title">TODAY</h2>
+            </header>
+
+            <div class="widget-body">
+                <p class="placeholder">Today's date loads here.</p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <header class="article-header">
+                <h2 class="article-name">CONTACT</h2>
+            </header>
+
+            <form action="/submit" method="POST" autocomplete="on">
+                <label for="name-and-surname">Name and Surname:</label>
+                <input type="text" id="name-and-surname" name="name-and-surname" placeholder="John Website" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="example.mail@mailprovider.com" required>
+
+                <label for="message">Your message:</label>
+                <textarea id="message" name="message" minlength="10" maxlength="1000"  placeholder="Type in your message here (must be 10-1000 characters)" required></textarea>
+
+                <button type="submit">Submit</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Stanisław Parma</p>
+    </footer>
+
+</body>
+</html>
