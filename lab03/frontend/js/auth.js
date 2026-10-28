@@ -234,7 +234,7 @@ export function initAuth() {
           const tokenData = await authApi.login(username, password);
           setToken(tokenData.access_token);
 
-          // 2. Pobranie danych profilu zalogowanego użytkownika
+          // 2. Pobranie danych profilu zalogowanegThe Fix: Make sure your frontend URL and your backend API URL use the exact same hostname.o użytkownika
           const user = await authApi.getMe();
           updateSessionUI(user);
           closeDialog();
